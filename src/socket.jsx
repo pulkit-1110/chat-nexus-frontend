@@ -7,8 +7,17 @@ const SocketContext = createContext();
 const getSocket = () => useContext(SocketContext);
 
 const SocketProvider = ({ children }) => {
-  const socket = useMemo(() => io(server, { withCredentials: true }), []);
-
+  console.log(`Socket Site: ${server}`);
+  const socket = useMemo(
+    () =>
+      io(server, {
+        withCredentials: true,
+        reconnection: true,
+        transports: ["websocket", "polling"],
+        reconnectionAttempts: 5,
+      }),
+    []
+  );
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   );
